@@ -32,12 +32,5 @@ public class EiffelTranslator {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(gson.toJson(eiffelToJSONVisitor.classDeclaration));
-        /*JSONObject obj = new JSONObject();
-        obj.put("a1", 1);
-        obj.put("a2", 2);
-        JSONObject obj2 = new JSONObject();
-        obj2.put("completely different", obj);
-        System.out.println(obj2.toJSONString());*/
-
     }
 }
