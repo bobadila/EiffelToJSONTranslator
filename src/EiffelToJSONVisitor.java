@@ -798,22 +798,4 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         manifestArray.put("values", values);
         return manifestArray;
     }
-    /*@Override
-    public LinkedHashMap<String, Object> visitLong_str_expr (@NotNull EiffelParser.Long_str_exprContext ctx) {
-        LinkedHashMap<String, Object> longStr = new LinkedHashMap<String, Object>();
-        longStr.put("type", "literal expression");
-        longStr.put("value", join(ctx.long_string().getText().split("%(\\\\r)?\\\\n[^%]*%")));
-        //longStr.put("value", ctx.long_string().getText().replaceAll("%\\\\r\\\\n.*%", ""));
-        return longStr;
-    }*/
-    public String join(String[] array) {
-        int k = array.length;
-        StringBuilder sb = new StringBuilder();
-        sb.append(array[0]);
-        for (int i = 1; i < k; i++) {
-            sb.append(array[i]);
-            System.err.println(array[i]);
-        }
-        return sb.toString();
-    }
 }
