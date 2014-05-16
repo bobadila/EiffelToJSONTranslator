@@ -1,6 +1,5 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-import org.json.simple.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
