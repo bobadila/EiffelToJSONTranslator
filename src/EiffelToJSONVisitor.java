@@ -3,6 +3,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         classObject.put("type", "class");
         classObject.putAll(visit(ctx.class_header()));
         if (ctx.indexing() != null) {
-            ArrayList<Object> indexList = new ArrayList<Object>();
+            LinkedList<Object> indexList = new LinkedList<Object>();
             for (EiffelParser.Index_clauseContext ic : ctx.indexing().index_list().index_clause())
                 indexList.add(visit(ic));
             classObject.put("index list", indexList);
@@ -54,7 +55,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         LinkedHashMap<String, Object> indexClause = new LinkedHashMap<String, Object>();
         if (ctx.index() != null)
             indexClause.put("index identifier", ctx.index().IDENTIFIER().getText());
-        ArrayList<Object> indexClauseList = new ArrayList<Object>();
+        LinkedList<Object> indexClauseList = new LinkedList<Object>();
         for (EiffelParser.Index_valueContext ic : ctx.index_terms().index_value())
             indexClauseList.add(ic.getText().replace("\"", ""));
         indexClause.put("index clause list", indexClauseList);
@@ -69,7 +70,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitFormal_generics (@NotNull EiffelParser.Formal_genericsContext ctx) {
         LinkedHashMap<String, Object> formalGenerics = new LinkedHashMap<String, Object>();
-        ArrayList<Object> jsonObjectsFormalGenerics = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsFormalGenerics = new LinkedList<Object>();
         for (EiffelParser.Formal_genericContext fg : ctx.formal_generic_list().formal_generic()) {
             jsonObjectsFormalGenerics.add(visit(fg));
         }
@@ -96,7 +97,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     public LinkedHashMap<String, Object> visitInheritance (@NotNull EiffelParser.InheritanceContext ctx) {
         LinkedHashMap<String, Object> inheritance = new LinkedHashMap<String, Object>();
         EiffelParser.Parent_listContext parent_listContext = ctx.parent_list();
-        ArrayList<Object> parents = new ArrayList<Object>();
+        LinkedList<Object> parents = new LinkedList<Object>();
         List<EiffelParser.ParentContext> parentContexts = parent_listContext.parent();
         for (EiffelParser.ParentContext p : parentContexts) {
             LinkedHashMap<String, Object> parent = new LinkedHashMap<String, Object>();
@@ -114,32 +115,32 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     public LinkedHashMap<String, Object> visitFeature_adaptation (@NotNull EiffelParser.Feature_adaptationContext ctx) {
         LinkedHashMap<String, Object> featureAdaptation = new LinkedHashMap<String, Object>();
         if (ctx.rename() != null) {
-            ArrayList<Object> jsonObjectsRenameList = new ArrayList<Object>();
+            LinkedList<Object> jsonObjectsRenameList = new LinkedList<Object>();
             for (EiffelParser.Rename_pairContext rpc : ctx.rename().rename_list().rename_pair())
                 jsonObjectsRenameList.add(visit(rpc));
             featureAdaptation.put("features renames list", jsonObjectsRenameList);
         }
         if (ctx.new_exports() != null) {
-            ArrayList<Object> jsonObjectsNewExports = new ArrayList<Object>();
+            LinkedList<Object> jsonObjectsNewExports = new LinkedList<Object>();
             for (EiffelParser.New_export_itemContext neic : ctx.new_exports().new_export_list().new_export_item()) {
                 jsonObjectsNewExports.add(visit(neic));
             }
             featureAdaptation.put("new exports", jsonObjectsNewExports);
         }
         if (ctx.redefine() != null) {
-            ArrayList<Object> jsonObjectsRedefine = new ArrayList<Object>();
+            LinkedList<Object> jsonObjectsRedefine = new LinkedList<Object>();
             for (EiffelParser.Feature_nameContext fn : ctx.redefine().feature_list().feature_name())
                 jsonObjectsRedefine.add(fn.getText());
             featureAdaptation.put("redefine list", jsonObjectsRedefine);
         }
         if (ctx.undefine() != null) {
-            ArrayList<Object> jsonObjectsUndefine = new ArrayList<Object>();
+            LinkedList<Object> jsonObjectsUndefine = new LinkedList<Object>();
             for (EiffelParser.Feature_nameContext fn : ctx.undefine().feature_list().feature_name())
                 jsonObjectsUndefine.add(fn.getText());
             featureAdaptation.put("undefine list", jsonObjectsUndefine);
         }
         if (ctx.select() != null) {
-            ArrayList<Object> jsonObjectsSelect = new ArrayList<Object>();
+            LinkedList<Object> jsonObjectsSelect = new LinkedList<Object>();
             for (EiffelParser.Feature_nameContext fn : ctx.select().feature_list().feature_name())
                 jsonObjectsSelect.add(fn.getText());
             featureAdaptation.put("select list", jsonObjectsSelect);
@@ -164,7 +165,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitSome_features (@NotNull EiffelParser.Some_featuresContext ctx) {
         LinkedHashMap<String, Object> featureSet = new LinkedHashMap<String, Object>();
-        ArrayList<Object> features = new ArrayList<Object>();
+        LinkedList<Object> features = new LinkedList<Object>();
         for (EiffelParser.Feature_nameContext fn : ctx.feature_list().feature_name())
             features.add(fn.getText());
         featureSet.put("type", "feature set");
@@ -183,10 +184,10 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     public LinkedHashMap<String, Object> visitFeatures (@NotNull EiffelParser.FeaturesContext ctx) {
         LinkedHashMap<String, Object> features = new LinkedHashMap<String, Object>();
         List<EiffelParser.Feature_clauseContext> featureClauses = ctx.feature_clause();
-        ArrayList<Object> jsonObjectsFeatureClauses = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsFeatureClauses = new LinkedList<Object>();
         for (EiffelParser.Feature_clauseContext fc : featureClauses) {
             List<EiffelParser.Feature_declarationContext> featureDeclarationList = fc.feature_declaration_list().feature_declaration();
-            ArrayList<Object> jsonObjectsFeatureDeclarations = new ArrayList<Object>();
+            LinkedList<Object> jsonObjectsFeatureDeclarations = new LinkedList<Object>();
             for (EiffelParser.Feature_declarationContext fd : featureDeclarationList) {
                 jsonObjectsFeatureDeclarations.add(visit(fd));
             }
@@ -206,7 +207,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitCreators (@NotNull EiffelParser.CreatorsContext ctx) {
         LinkedHashMap<String, Object> creation = new LinkedHashMap<String, Object>();
-        ArrayList<Object> jsonObjectsCreationClauses = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsCreationClauses = new LinkedList<Object>();
         for (EiffelParser.Creation_clauseContext ccc : ctx.creation_clause()) {
             jsonObjectsCreationClauses.add(visit(ccc));
         }
@@ -219,7 +220,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         if (ctx.clients() != null) {
             creationClause.putAll(visit(ctx.clients()));
         }
-        ArrayList<Object> jsonObjectsProcedures = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsProcedures = new LinkedList<Object>();
         for (EiffelParser.Procedure_nameContext pnc : ctx.procedure_list().procedure_name())
             jsonObjectsProcedures.add(pnc.getText());
         creationClause.put("procedure list", jsonObjectsProcedures);
@@ -235,7 +236,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitClients (@NotNull EiffelParser.ClientsContext ctx) {
         LinkedHashMap<String, Object> clients = new LinkedHashMap<String, Object>();
-        ArrayList<Object> classList = new ArrayList<Object>();
+        LinkedList<Object> classList = new LinkedList<Object>();
         for (EiffelParser.Class_nameContext cn : ctx.class_list().class_name())
             classList.add(cn.getText());
         clients.put("clients", classList);
@@ -248,7 +249,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         if (featuresNames.size() == 1)
             featureList.put("name", featuresNames.get(0).feature_name().IDENTIFIER().getText());
         else {
-            ArrayList<Object> jsonObjectsFeaturesNames = new ArrayList<Object>();
+            LinkedList<Object> jsonObjectsFeaturesNames = new LinkedList<Object>();
             for (EiffelParser.New_featureContext fn : featuresNames) {
                 jsonObjectsFeaturesNames.add(fn.feature_name().IDENTIFIER().toString());
             }
@@ -280,7 +281,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitEntity_declaration_list (@NotNull EiffelParser.Entity_declaration_listContext ctx) {
         LinkedHashMap<String, Object> formalArguments = new LinkedHashMap<String, Object>();
-        ArrayList<Object> jsonObjectsFormalArguments = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsFormalArguments = new LinkedList<Object>();
         List<EiffelParser.Entity_declaration_groupContext> formalArgumentsGroups = ctx.entity_declaration_group();
         for (EiffelParser.Entity_declaration_groupContext edc : formalArgumentsGroups) {
             LinkedHashMap<String, Object> type = visit(edc.type_mark().type());
@@ -299,7 +300,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         LinkedHashMap<String, Object> type = new LinkedHashMap<String, Object>();
         type.put("type name", ctx.class_type().getText());
         if (ctx.actual_generics() != null) {
-            ArrayList<Object> generics = new ArrayList<Object>();
+            LinkedList<Object> generics = new LinkedList<Object>();
 
             for (EiffelParser.TypeContext tc : ctx.actual_generics().type_list().type())
                 generics.add(visit(tc));
@@ -397,7 +398,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitAssertion (@NotNull EiffelParser.AssertionContext ctx) {
         LinkedHashMap<String, Object> assertions = new LinkedHashMap<String, Object>();
-        ArrayList<Object> assertionsList = new ArrayList<Object>();
+        LinkedList<Object> assertionsList = new LinkedList<Object>();
         for (EiffelParser.Assertion_clauseContext ac : ctx.assertion_clause())
             assertionsList.add(visit(ac));
         assertions.put("assertions list", assertionsList);
@@ -415,7 +416,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     public LinkedHashMap<String, Object> visitCompound (@NotNull EiffelParser.CompoundContext ctx) {
         List<EiffelParser.InstructionContext> instructions = ctx.instruction();
         LinkedHashMap<String, Object> compoundsBlock = new LinkedHashMap<String, Object>();
-        ArrayList<Object> jsonObjectsInstructions = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsInstructions = new LinkedList<Object>();
         //compounds.put("num_of_instr", instructions.size());
         for (EiffelParser.InstructionContext ic : instructions) {
             jsonObjectsInstructions.add(visit(ic));
@@ -563,7 +564,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitInvariant (@NotNull EiffelParser.InvariantContext ctx) {
         LinkedHashMap<String, Object> invariant = new LinkedHashMap<String, Object>();
-        ArrayList<Object> jsonObjectsAssertions = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsAssertions = new LinkedList<Object>();
         for (EiffelParser.Assertion_clauseContext acc : ctx.assertion().assertion_clause()) {
             jsonObjectsAssertions.add(visit(acc));
         }
@@ -591,18 +592,18 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         conditional.put("type", "conditional");
 
         if (ctx.then_part_list().getChildCount() != 1) {
-            ArrayList<Object> alternativesList = new ArrayList<Object>();
+            LinkedList<Object> alternativesList = new LinkedList<Object>();
             for (EiffelParser.Then_partContext tpc : ctx.then_part_list().then_part()) {
                 LinkedHashMap<String, Object> alternative = new LinkedHashMap<String, Object>();
                 alternative.put("condition", visit(tpc.boolean_expression()));
-                alternative.put("consequent", visit(tpc.compound()));
+                alternative.put("if-true", visit(tpc.compound()));
                 alternativesList.add(alternative);
             }
             conditional.put("alternatives list", alternativesList);
         }
         else {
             conditional.put("condition", visit(ctx.then_part_list().then_part(0).boolean_expression()));
-            conditional.put("consequent", visit(ctx.then_part_list().then_part(0).compound()));
+            conditional.put("if-true", visit(ctx.then_part_list().then_part(0).compound()));
         }
         if (ctx.else_part() != null) {
             conditional.put("else part", visit(ctx.else_part().compound()));
@@ -615,7 +616,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         multiBranch.put("type", "multi-branch instruction");
         multiBranch.put("inspected expression", visit(ctx.expression()));
         if (ctx.when_part_list() != null) {
-            ArrayList<Object> alternatives = new ArrayList<Object>();
+            LinkedList<Object> alternatives = new LinkedList<Object>();
             for (EiffelParser.When_partContext wpc : ctx.when_part_list().when_part()) {
                 LinkedHashMap<String, Object> alternative = new LinkedHashMap<String, Object>();
                 if (wpc.choices() != null)
@@ -632,7 +633,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     @Override
     public LinkedHashMap<String, Object> visitChoices (@NotNull EiffelParser.ChoicesContext ctx) {
         LinkedHashMap<String, Object> choices = new LinkedHashMap<String, Object>();
-        ArrayList<Object> jsonObjectsChoices = new ArrayList<Object>();
+        LinkedList<Object> jsonObjectsChoices = new LinkedList<Object>();
         for (EiffelParser.ChoiceContext cc : ctx.choice())
             jsonObjectsChoices.add(visit(cc));
         choices.put("choices list", jsonObjectsChoices);
@@ -663,7 +664,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         if (ctx.variant() != null)
             loopInstruction.put("variant", visit(ctx.variant()));
         loopInstruction.put("exit condition", visit(ctx.loop_body().exit().boolean_expression()));
-        loopInstruction.put("loop body", ctx.loop_body().compound());
+        loopInstruction.put("loop body", visit(ctx.loop_body().compound()));
         return loopInstruction;
     }
     @Override
@@ -678,7 +679,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         LinkedHashMap<String, Object> debug = new LinkedHashMap<String, Object>();
         debug.put("type", "debug instruction");
         if (ctx.debug().debug_keys() != null) {
-            ArrayList<Object> debugKeys = new ArrayList<Object>();
+            LinkedList<Object> debugKeys = new LinkedList<Object>();
             for (EiffelParser.Debug_keyContext dk : ctx.debug().debug_keys().debug_key_list().debug_key())
                 debugKeys.add(dk.getText());
             debug.put("debug keys", debugKeys);
@@ -703,12 +704,13 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
 
     public LinkedHashMap<String, Object> processCallStatement(ArrayList<EiffelParser.Usual_callContext> callChain, int rightMostCall) {
         LinkedHashMap<String, Object> callStatement = new LinkedHashMap<String, Object>();
-        if (rightMostCall != 0) {
+        if (rightMostCall > 1) {
             callStatement.put("type", "call");
+
             callStatement.put("call entity", processCallStatement(callChain, rightMostCall - 1));
             callStatement.put("feature to call", callChain.get(rightMostCall).IDENTIFIER().getText());
             if (callChain.get(rightMostCall).params() != null) {
-                ArrayList<Object> params = new ArrayList<Object>();
+                LinkedList<Object> params = new LinkedList<Object>();
                 for (EiffelParser.ParamContext pc : callChain.get(rightMostCall).params().param())
                     params.add(visit(pc));
                 callStatement.put("parameters list", params);
@@ -718,7 +720,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
             callStatement.put("type", "call");
             callStatement.put("feature", callChain.get(0).IDENTIFIER().getText());
             if (callChain.get(0).params() != null) {
-                ArrayList<Object> params = new ArrayList<Object>();
+                LinkedList<Object> params = new LinkedList<Object>();
                 for (EiffelParser.ParamContext pc : callChain.get(rightMostCall).params().param())
                     params.add(visit(pc));
                 callStatement.put("parameters list", params);
@@ -737,7 +739,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     public LinkedHashMap<String, Object> visitStrip_expr (@NotNull EiffelParser.Strip_exprContext ctx) {
         LinkedHashMap<String, Object> stripExpr = new LinkedHashMap<String, Object>();
         stripExpr.put("type", "strip expression");
-        ArrayList<Object> attributes = new ArrayList<Object>();
+        LinkedList<Object> attributes = new LinkedList<Object>();
         for (EiffelParser.AttributeContext ac : ctx.strip().attribute_list().attribute())
             attributes.add(ac.getText());
         stripExpr.put("attributes list", attributes);
@@ -755,7 +757,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     public LinkedHashMap<String, Object> visitCheck(@NotNull EiffelParser.CheckContext ctx) {
         LinkedHashMap<String, Object> checkInstruction = new LinkedHashMap<String, Object>();
         checkInstruction.put("type", "check instruction");
-        ArrayList<Object> assertions = new ArrayList<Object>();
+        LinkedList<Object> assertions = new LinkedList<Object>();
         for (EiffelParser.Assertion_clauseContext acc : ctx.assertion().assertion_clause()) {
             assertions.add(visit(acc));
         }
@@ -773,7 +775,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
         if (ctx.creation().creation_call() != null) {
             creationInstruction.put("creation procedure", ctx.creation().creation_call().procedure_name().getText());
 
-            ArrayList<Object> params = new ArrayList<Object>();
+            LinkedList<Object> params = new LinkedList<Object>();
             for (EiffelParser.ParamContext pc : ctx.creation().creation_call().params().param())
                 params.add(visit(pc));
 
@@ -786,7 +788,7 @@ public class EiffelToJSONVisitor extends EiffelBaseVisitor<LinkedHashMap<String,
     public LinkedHashMap<String, Object> visitManifest_array_expr (@NotNull EiffelParser.Manifest_array_exprContext ctx) {
         LinkedHashMap<String, Object> manifestArray = new LinkedHashMap<String, Object>();
         manifestArray.put("type", "manifest array");
-        ArrayList<Object> values = new ArrayList<Object>();
+        LinkedList<Object> values = new LinkedList<Object>();
         for (EiffelParser.ExpressionContext ec : ctx.manifest_array().expression_list().expression())
             values.add(visit(ec));
         manifestArray.put("values", values);

@@ -4,10 +4,62 @@ indexing
 class HELLO create
     make
 feature
-    make is
-            -- Print a simple message.
-         do
-            io . put_string (" Hello World");
-            io . put_new_line;
-         end;
+    execute is
+    			-- &lt;Precursor&gt;
+    			-- Creates a socket and connects to the http server.
+    		local
+    			l_listening_socket: TCP_STREAM_SOCKET;
+    			l_http_port: INTEGER;
+    		do
+    			launched := False;
+    			port := 0;
+    			is_stop_requested := False;
+    			l_http_port := http_server_port;
+                if
+    				a + b >= c and then
+    				create_from_name (l_servername)
+    			then
+    				l_listening_socket.make_server_by_address_and_port (l_addr, l_http_port);
+    			else
+    				l_listening_socket.make_server_by_port (l_http_port);
+    			end;
+
+    			if not l_listening_socket.is_bound then
+    				if is_verbose then
+    					log ("Socket could not be bound on port " + l_http_port.out);
+    				end;
+    			else
+    				l_http_port := l_listening_socket.pocket;
+    				from
+                        l_listening_socket.listen (max_tcp_clients);
+                        if is_verbose then
+                        	log ("%NHTTP Connection Server ready");
+                        end;
+                        on_launched (l_http_port);
+                    until
+                        is_stop_requested
+                    loop
+                        l_listening_socket.accept;
+                        if not is_stop_requested then
+                        	if l_listening_socket.accepted then
+                        		process_connection (l_thread_http_socket);
+                        	end;
+                        end;
+                        is_stop_requested := stop_requested_on_server;
+                    end;
+    				l_listening_socket.cleanup;
+    				check
+    					socket_is_closed: l_listening_socket.is_closed;
+    				end;
+    			end;
+    			if launched then
+    				on_stopped;
+    			end;
+    			if is_verbose then
+    				log ();
+    			end;
+    		end;
+
+    	    end;
+
 end - - class HELLO

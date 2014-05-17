@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.json.simple.JSONObject;
 
 /**
  * Created by andrew on 5/11/2014.
@@ -22,13 +23,15 @@ public class EiffelTranslator {
         EiffelLexer lexer = new EiffelLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         EiffelParser parser = new EiffelParser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new EiffelErrorListener());
+        /*parser.removeErrorListeners();
+        parser.addErrorListener(new EiffelErrorListener());*/
         ParseTree tree = parser.class_declaration();
 
         EiffelToJSONVisitor eiffelToJSONVisitor = new EiffelToJSONVisitor();
         eiffelToJSONVisitor.visit(tree);
-
+        //JSONObject jsonObject = new JSONObject(eiffelToJSONVisitor.classDeclaration);
+        //System.out.println(jsonObject.toJSONString());
+        //System.out.println(tree.toString());
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(gson.toJson(eiffelToJSONVisitor.classDeclaration));
     }
